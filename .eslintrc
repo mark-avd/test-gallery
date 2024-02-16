@@ -1,0 +1,66 @@
+{
+  "env": {
+    "browser": true,
+    "es2023": true,
+    "node": true,
+    "jest": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:sonarjs/recommended",
+    "plugin:unicorn/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "react",
+    "react-hooks",
+    "sonarjs",
+    "unicorn",
+    "prettier"
+  ],
+  "rules": {
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      {
+        "prefer": "type-imports"
+      }
+    ],
+    "arrow-body-style": [
+      "error",
+      "as-needed"
+    ],
+    "react/self-closing-comp": [
+      "error",
+      {
+        "component": true,
+        "html": true
+      }
+    ],
+    "react/react-in-jsx-scope": "off",
+    "unicorn/prefer-export-from": "warn",
+    "unicorn/prevent-abbreviations": "off",
+    "unicorn/no-useless-undefined": "off",
+    "unicorn/filename-case": "off",
+    "unicorn/no-null": "off"
+  },
+  "ignorePatterns": [
+    "/dist"
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}
