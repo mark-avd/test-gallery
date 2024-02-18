@@ -2,11 +2,25 @@
   display: flex;
   flex-wrap: nowrap;
   gap: 8px;
+  height: 100%;
+  transition: transform 0.5s ease-in-out;
+
+  &__container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  &__wrapper {
+    overflow: hidden;
+    height: 76px;
+    padding: 6px;
+  }
 
   &__image-preview {
     cursor: pointer;
     width: 64px;
-    height: auto;
+    height: 64px;
     border-radius: 6px;
     transition: transform 0.3s ease;
 

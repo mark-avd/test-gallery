@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import { store } from 'store'
 import type { FC } from 'react'
@@ -6,22 +5,6 @@ import './ImagePreview.scss'
 
 export const ImagePreview: FC = observer(() => {
   const { currentImage, isFirstImage, isLastImage, openModal, switchCurrentImage } = store
-
-  useEffect(() => {
-    const onArrowPress = (event: KeyboardEvent) => {
-      if (event.key === 'ArrowLeft' && !isFirstImage) {
-        switchCurrentImage('prev')
-      } else if (event.key === 'ArrowRight' && !isLastImage) {
-        switchCurrentImage('next')
-      }
-    }
-
-    document.addEventListener('keydown', onArrowPress)
-
-    return () => {
-      document.removeEventListener('keydown', onArrowPress)
-    }
-  }, [isFirstImage, isLastImage, switchCurrentImage])
 
   return (
     <div className={'image-preview__wrapper'}>

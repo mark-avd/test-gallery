@@ -13,6 +13,7 @@ class Store {
   showModal = false
 
   limit = 10
+  isFetched = false
 
   constructor() {
     makeAutoObservable(this)
@@ -54,32 +55,13 @@ class Store {
     this.totalImages = totalImages
   }
 
+  setIsFetched = (status: boolean) => {
+    this.isFetched = status
+  }
+
   setCurrentImage = (image: PhotoDto) => {
     this.currentImage = image
     this.currentImageIndex = this.images.findIndex((image) => image.id === this.currentImage?.id)
-  }
-
-  setImageOffset = async (direction: Direction) => {
-    if (direction === 'prev' && !this.isLowestOffset) {
-      this.imageOffset = this.imageOffset - 1
-    } else if (direction === 'next' && !this.isHighestOffset) {
-      this.imageOffset = this.imageOffset + 1
-      await this.fetchNextPhoto()
-    }
-  }
-
-  switchCurrentImage = async (direction: Direction) => {
-    const getImageByDirection = (direction: Direction) =>
-      this.images[direction === 'prev' ? this.currentImageIndex - 1 : this.currentImageIndex + 1]
-
-    if (direction === 'prev' && !this.isFirstVisibleImage) {
-      this.setCurrentImage(getImageByDirection('prev'))
-    } else if (direction === 'next' && !this.isLastVisibleImage) {
-      this.setCurrentImage(getImageByDirection('next'))
-    } else if (this.isLastVisibleImage) {
-      await this.setImageOffset('next')
-      this.setCurrentImage(getImageByDirection('next'))
-    }
   }
 
   setRequestLimit = (limit: number) => {
@@ -99,6 +81,7 @@ class Store {
     if (data.success) {
       this.setImages(data.photos)
       this.setTotalImages(data.total_photos)
+      this.setIsFetched(true)
       if (!this.currentImage) {
         this.setCurrentImage(data.photos[0])
       }
@@ -109,6 +92,37 @@ class Store {
     const { data } = await getPhotos({ offset: this.requestOffset, limit: 1 })
     if (data.success) {
       this.setImages([...this.images, ...data.photos])
+    }
+  }
+
+  scrollFeed = async (direction: Direction) => {
+    if (direction === 'prev' && !this.isLowestOffset) {
+      this.imageOffset = this.imageOffset - 1
+    } else if (direction === 'next' && !this.isHighestOffset) {
+      this.imageOffset = this.imageOffset + 1
+
+      if (this.limit + this.imageOffset > this.images.length) {
+        await this.fetchNextPhoto()
+      }
+    }
+  }
+
+  switchCurrentImage = async (direction: Direction) => {
+    const getImageByDirection = (direction: Direction) =>
+      this.images[direction === 'prev' ? this.currentImageIndex - 1 : this.currentImageIndex + 1]
+
+    const flipCurrentImage = (direction: Direction) => this.setCurrentImage(getImageByDirection(direction))
+
+    if (direction === 'prev' && !this.isFirstVisibleImage) {
+      flipCurrentImage(direction)
+    } else if (direction === 'next' && !this.isLastVisibleImage) {
+      flipCurrentImage(direction)
+    } else if (this.isFirstVisibleImage || this.isLastVisibleImage) {
+      if ((this.isLowestOffset && direction === 'prev') || (this.isHighestOffset && direction === 'next')) {
+        return
+      }
+      await this.scrollFeed(direction)
+      flipCurrentImage(direction)
     }
   }
 }
