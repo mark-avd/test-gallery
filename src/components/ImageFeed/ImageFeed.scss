@@ -1,0 +1,17 @@
+.image-feed {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+
+  &__image-preview {
+    cursor: pointer;
+    width: 64px;
+    height: auto;
+    border-radius: 6px;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}

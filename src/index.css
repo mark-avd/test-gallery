@@ -18,3 +18,7 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+img {
+  background: rgba(255, 255, 255, 0.45);
+}
