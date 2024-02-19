@@ -61,7 +61,10 @@ class Store {
 
   setCurrentImage = (image: PhotoDto) => {
     this.currentImage = image
-    this.currentImageIndex = this.images.findIndex((image) => image.id === this.currentImage?.id)
+    const index = this.images.findIndex((image) => image.id === this.currentImage?.id)
+    if (index !== -1 && image) {
+      this.currentImageIndex = index
+    }
   }
 
   setRequestLimit = (limit: number) => {
@@ -108,8 +111,11 @@ class Store {
   }
 
   switchCurrentImage = async (direction: Direction) => {
-    const getImageByDirection = (direction: Direction) =>
-      this.images[direction === 'prev' ? this.currentImageIndex - 1 : this.currentImageIndex + 1]
+    const getImageByDirection = (direction: Direction) => {
+      const nextIndex = direction === 'prev' ? this.currentImageIndex - 1 : this.currentImageIndex + 1
+      const nextImage = this.images[nextIndex]
+      return nextImage ?? this.currentImage
+    }
 
     const flipCurrentImage = (direction: Direction) => this.setCurrentImage(getImageByDirection(direction))
 
