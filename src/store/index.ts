@@ -24,7 +24,7 @@ class Store {
   }
 
   get isHighestOffset() {
-    return this.limit + this.imageOffset >= this.totalImages
+    return this.limit + this.imageOffset === this.totalImages - 1
   }
 
   get isFirstImage() {
